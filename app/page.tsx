@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import InsightForm from '@/components/InsightForm';
 import OutputPanel from '@/components/OutputPanel';
 import { GenerateInput } from '@/app/api/generate/route';
@@ -71,8 +72,11 @@ export default function Home() {
     <div className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
       <div className="max-w-4xl mx-auto px-4 py-10 pb-20">
         <header className="mb-10">
-          <h1 className="text-2xl font-semibold tracking-tight">Tellagence Insight Assistant</h1>
-          <p className="mt-1 text-sm text-neutral-500">
+          <div className="flex items-center gap-3 mb-2">
+            <Image src="/logo.png" alt="Tellagence" width={36} height={36} className="rounded-md" />
+            <h1 className="text-2xl font-semibold tracking-tight">Tellagence Insight Assistant</h1>
+          </div>
+          <p className="text-sm text-neutral-500">
             Translate raw analytics data into strategic narrative. Paste your data, configure the output, generate.
           </p>
         </header>
@@ -91,6 +95,8 @@ export default function Home() {
             loading={loading}
             confusionFlags={activeFlags}
             outputType={lastInput?.outputType ?? 'all'}
+            clientName={lastInput?.clientName ?? ''}
+            campaignName={lastInput?.campaignName ?? ''}
           />
         </div>
       </div>

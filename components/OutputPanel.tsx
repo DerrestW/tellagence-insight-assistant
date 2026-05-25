@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { generatePptx } from '@/lib/generatePptx';
 
 type SectionKey = 'tldr' | 'insights' | 'analyst_qs' | 'content_qs';
 
@@ -9,6 +10,8 @@ interface OutputPanelProps {
   loading: Partial<Record<SectionKey, boolean>>;
   confusionFlags: string[];
   outputType: string;
+  clientName: string;
+  campaignName: string;
 }
 
 const TABS: { key: SectionKey; label: string; loadingLabel: string }[] = [
@@ -59,16 +62,33 @@ function SectionBlock({ text, isLoading, loadingLabel }: { text?: string; isLoad
   );
 }
 
-export default function OutputPanel({ results, loading, confusionFlags, outputType }: OutputPanelProps) {
+export default function OutputPanel({ results, loading, confusionFlags, outputType, clientName, campaignName }: OutputPanelProps) {
   const visibleTabs =
     outputType === 'all'
       ? TABS
       : TABS.filter((t) => t.key === outputType);
 
   const [activeTab, setActiveTab] = useState<SectionKey>(visibleTabs[0]?.key ?? 'tldr');
+  const [exporting, setExporting] = useState(false);
 
   const hasAnyContent = Object.values(results).some(Boolean);
   const isAnyLoading = Object.values(loading).some(Boolean);
+
+  async function handleExport() {
+    setExporting(true);
+    try {
+      await generatePptx({
+        clientName,
+        campaignName,
+        tldr: results.tldr,
+        insights: results.insights,
+        analyst_qs: results.analyst_qs,
+        content_qs: results.content_qs,
+      });
+    } finally {
+      setExporting(false);
+    }
+  }
 
   if (!hasAnyContent && !isAnyLoading) return null;
 
@@ -112,11 +132,18 @@ export default function OutputPanel({ results, loading, confusionFlags, outputTy
               </button>
             ))}
           </div>
-          {allText && (
-            <div className="pl-2 shrink-0">
-              <CopyButton text={allText} />
-            </div>
-          )}
+          <div className="flex items-center gap-2 pl-2 shrink-0">
+            {allText && <CopyButton text={allText} />}
+            {hasAnyContent && !isAnyLoading && (
+              <button
+                onClick={handleExport}
+                disabled={exporting}
+                className="text-xs text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 border border-neutral-200 dark:border-neutral-700 rounded px-2 py-1 transition-colors disabled:opacity-50"
+              >
+                {exporting ? 'Exporting...' : 'Export .pptx'}
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="p-5 min-h-[200px]">
