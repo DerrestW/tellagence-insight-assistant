@@ -22,7 +22,7 @@ interface PptxInput {
 
 async function fetchLogoBase64(): Promise<string | null> {
   try {
-    const res = await fetch('/logo.png');
+    const res = await fetch('/logo.jpeg');
     if (!res.ok) return null;
     const blob = await res.blob();
     return await new Promise((resolve) => {

@@ -73,7 +73,7 @@ export default function Home() {
       <div className="max-w-4xl mx-auto px-4 py-10 pb-20">
         <header className="mb-10">
           <div className="flex items-center gap-3 mb-2">
-            <Image src="/logo.png" alt="Tellagence" width={36} height={36} className="rounded-md" />
+            <Image src="/logo.jpeg" alt="Tellagence" width={36} height={36} className="rounded-md" />
             <h1 className="text-2xl font-semibold tracking-tight">Tellagence Insight Assistant</h1>
           </div>
           <p className="text-sm text-neutral-500">
