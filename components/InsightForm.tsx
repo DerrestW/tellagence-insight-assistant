@@ -10,6 +10,7 @@ const DEFAULT_TONES = [
   'Specific over vague',
   'No filler sentences',
   'Always shows the so what',
+  'Consultative and collaborative',
 ];
 
 interface InsightFormProps {
@@ -94,14 +95,6 @@ export default function InsightForm({ onSubmit, isLoading }: InsightFormProps) {
 
       <div className="space-y-1.5">
         <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-          Additional confusion flags
-        </label>
-        <ConfusionFlag flags={confusionFlags} onChange={setConfusionFlags} />
-        <p className="text-xs text-neutral-500">Flag anything that could be misread in the output — abbreviations, shared names, ambiguous terms.</p>
-      </div>
-
-      <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
           Analyst data <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -112,6 +105,15 @@ export default function InsightForm({ onSubmit, isLoading }: InsightFormProps) {
           placeholder="Paste raw analytics data, performance numbers, post-level breakdowns, benchmark comparisons, YoY deltas — anything from the analyst team."
           className="w-full px-3 py-2 text-sm border border-neutral-200 dark:border-neutral-700 rounded-md bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-neutral-100 resize-y min-h-[160px]"
         />
+        <p className="text-xs text-neutral-500">Tip: paste directly from your analyst&apos;s spreadsheet or export — tables copy cleanly and give the model the clearest signal.</p>
+      </div>
+
+      <div className="space-y-1.5">
+        <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          Additional confusion flags
+        </label>
+        <ConfusionFlag flags={confusionFlags} onChange={setConfusionFlags} />
+        <p className="text-xs text-neutral-500">Flag anything that could be misread in the output — abbreviations, shared names, ambiguous terms.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
