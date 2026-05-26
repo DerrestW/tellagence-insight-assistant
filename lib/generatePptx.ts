@@ -1,4 +1,6 @@
-import pptxgen from 'pptxgenjs';
+// pptxgenjs is loaded dynamically to avoid Next.js SSR conflicts
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PptxGenJS = any;
 
 const BRAND_BLUE = '3333EE';
 const WHITE = 'FFFFFF';
@@ -35,14 +37,16 @@ async function fetchLogoBase64(): Promise<string | null> {
   }
 }
 
-function addBrandFooter(slide: pptxgen.Slide, label: string) {
+function addBrandFooter(slide: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+any, label: string) {
   slide.addText(`Tellagence  ·  ${label}`, {
     x: MARGIN, y: FOOTER_Y, w: CONTENT_W, h: 0.25,
     fontSize: 7, color: MID_GRAY, align: 'left',
   });
 }
 
-function addLogoToSlide(slide: pptxgen.Slide, logoData: string | null) {
+function addLogoToSlide(slide: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+any, logoData: string | null) {
   if (!logoData) return;
   slide.addImage({ data: logoData, x: SLIDE_W - MARGIN - 0.45, y: FOOTER_Y - 0.05, w: 0.45, h: 0.45 });
 }
@@ -106,7 +110,8 @@ function splitQuestions(text: string): { question: string; context: string }[] {
 }
 
 export async function generatePptx(input: PptxInput) {
-  const pptx = new pptxgen();
+  const PptxGenJS: PptxGenJS = (await import('pptxgenjs')).default;
+  const pptx = new PptxGenJS();
   pptx.layout = 'LAYOUT_WIDE';
 
   const logoData = await fetchLogoBase64();
@@ -151,7 +156,7 @@ export async function generatePptx(input: PptxInput) {
       x: MARGIN, y: 0.8, w: CONTENT_W, h: 0.45,
       fontSize: 22, bold: true, color: NEAR_BLACK, align: 'left',
     });
-    s2.addShape(pptxgen.ShapeType.rect, {
+    s2.addShape(pptx.ShapeType.rect, {
       x: MARGIN, y: 1.35, w: CONTENT_W, h: 0.025, fill: { color: BRAND_BLUE },
     });
 
@@ -177,7 +182,7 @@ export async function generatePptx(input: PptxInput) {
         x: MARGIN, y: 0.45, w: 3, h: 0.35,
         fontSize: 10, bold: true, color: BRAND_BLUE, charSpacing: 2,
       });
-      si.addShape(pptxgen.ShapeType.rect, {
+      si.addShape(pptx.ShapeType.rect, {
         x: MARGIN, y: 0.9, w: CONTENT_W, h: 0.025, fill: { color: BRAND_BLUE },
       });
       si.addText(input.insights, {
@@ -202,7 +207,7 @@ export async function generatePptx(input: PptxInput) {
           fontSize: 20, bold: true, color: NEAR_BLACK, align: 'left', wrap: true,
         });
 
-        si.addShape(pptxgen.ShapeType.rect, {
+        si.addShape(pptx.ShapeType.rect, {
           x: MARGIN, y: 1.5, w: CONTENT_W, h: 0.025, fill: { color: BRAND_BLUE },
         });
 
@@ -219,7 +224,7 @@ export async function generatePptx(input: PptxInput) {
 
         // Right column: Implications
         if (block.implications) {
-          si.addShape(pptxgen.ShapeType.rect, {
+          si.addShape(pptx.ShapeType.rect, {
             x: MARGIN + 6.2, y: 1.65, w: CONTENT_W - 6.2, h: 5.0,
             fill: { color: LIGHT_GRAY }, line: { color: LIGHT_GRAY },
           });
@@ -252,7 +257,7 @@ export async function generatePptx(input: PptxInput) {
       x: MARGIN, y: 0.8, w: CONTENT_W, h: 0.45,
       fontSize: 22, bold: true, color: NEAR_BLACK,
     });
-    sq.addShape(pptxgen.ShapeType.rect, {
+    sq.addShape(pptx.ShapeType.rect, {
       x: MARGIN, y: 1.35, w: CONTENT_W, h: 0.025, fill: { color: BRAND_BLUE },
     });
 
@@ -296,7 +301,7 @@ export async function generatePptx(input: PptxInput) {
       x: MARGIN, y: 0.8, w: CONTENT_W, h: 0.45,
       fontSize: 22, bold: true, color: NEAR_BLACK,
     });
-    sc.addShape(pptxgen.ShapeType.rect, {
+    sc.addShape(pptx.ShapeType.rect, {
       x: MARGIN, y: 1.35, w: CONTENT_W, h: 0.025, fill: { color: BRAND_BLUE },
     });
 

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { generatePptx } from '@/lib/generatePptx';
 
 type SectionKey = 'tldr' | 'insights' | 'analyst_qs' | 'content_qs';
 
@@ -70,13 +69,16 @@ export default function OutputPanel({ results, loading, confusionFlags, outputTy
 
   const [activeTab, setActiveTab] = useState<SectionKey>(visibleTabs[0]?.key ?? 'tldr');
   const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
 
   const hasAnyContent = Object.values(results).some(Boolean);
   const isAnyLoading = Object.values(loading).some(Boolean);
 
   async function handleExport() {
     setExporting(true);
+    setExportError(null);
     try {
+      const { generatePptx } = await import('@/lib/generatePptx');
       await generatePptx({
         clientName,
         campaignName,
@@ -85,6 +87,8 @@ export default function OutputPanel({ results, loading, confusionFlags, outputTy
         analyst_qs: results.analyst_qs,
         content_qs: results.content_qs,
       });
+    } catch (err) {
+      setExportError(err instanceof Error ? err.message : 'Export failed — check the browser console for details.');
     } finally {
       setExporting(false);
     }
@@ -146,6 +150,11 @@ export default function OutputPanel({ results, loading, confusionFlags, outputTy
           </div>
         </div>
 
+        {exportError && (
+          <div className="px-5 pt-3 text-xs text-red-600 dark:text-red-400 border-b border-neutral-200 dark:border-neutral-700 pb-3">
+            Export failed: {exportError}
+          </div>
+        )}
         <div className="p-5 min-h-[200px]">
           {visibleTabs.map((tab) => (
             <div key={tab.key} className={activeTab === tab.key ? 'block' : 'hidden'}>
